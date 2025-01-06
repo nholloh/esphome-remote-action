@@ -1,14 +1,15 @@
 # ESPHome Remote Action
 
-ESPHome Remote Action enables one ESPHome node to query state and trigger actions on another node via the built-in web server REST API, without routing requests through Home Assistant.
+ESPHome Remote Action enables one ESPHome node to query state from and trigger actions on another node via the built-in web server REST API, without routing requests through Home Assistant. It is a workaround for not being able to use the native API for node to node communication.
 
 ## When to use this
 
 When you…
 
-- Don’t mind a latency of up to ~1 second before triggering  
-- Prefer not to set up a UDP-based solution (since it is a lot more repetitive work on target and source device)  
-- Want to avoid routing everything via Home Assistant (thus eliminating a potential point of failure)
+- Want to avoid routing everything via Home Assistant (increasing fault tolerance should Home Assistant not respond)
+- Don’t mind a latency of up to ~1 second.
+- Don't care about encryption or SSL validation for the actions triggered.
+- Prefer not to set up a UDP-based solution (since it is a lot more repetitive work on target and source device).
 
 ## Minimal setup
 
@@ -194,7 +195,7 @@ switch:
 
 cover:
   - platform: current_based
-    name: "livingroom-cover Cover"
+    name: "${devicename} Cover"
     id: cover1
 
     open_sensor: current_channel_2
