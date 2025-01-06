@@ -43,7 +43,7 @@ on_press:
       domain: "cover" # the type of component: [cover, light, switch, fan, select, button, number]
       component_name: "Livingroom Cover" # the name of the component to trigger
       action: "close" # the action to run. Available actions depend on the domain.
-      variables: "" # additional variables for the action. Pass "" if no variables are required.
+      variables: "" # additional variables for the action. Use URL-like key-value pairing (key=value&...). Pass "" if no variables are required.
 ```
 
 ## Detailed example: Running an action
