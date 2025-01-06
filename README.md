@@ -71,11 +71,8 @@ esp32:
     type: arduino
 
 packages:
-  remote_package:
-    url: !secret github_url
-    files:
-      - remote-action.yml
-    refresh: 0s
+  remote_action: 
+    url: github://nholloh/esphome-remote-action/remote-action.yml@latest
 
 logger:
 api:
