@@ -38,12 +38,32 @@ packages:
 # Within any automation, run the script:
 on_press:
   - script.execute:
-      id: remote_action # id of the script, keep this.
-      device_name: "livingroom-cover" # the name of your device from the esphome section.
-      domain: "cover" # the type of component: [cover, light, switch, fan, select, button, number]
-      component_name: "Livingroom Cover" # the name of the component to trigger
-      action: "close" # the action to run. Available actions depend on the domain.
-      variables: "" # additional variables for the action. Use URL-like key-value pairing (key=value&...). Pass "" if no variables are required.
+      
+      # id of the script, keep this.
+      id: remote_action 
+      
+      # the name of your device from the esphome section.
+      device_name: "livingroom-cover" 
+
+      # the type of component: [cover, light, switch, fan, select, button, number]
+      domain: "cover" 
+
+      # the name of the component to trigger.
+      component_name: "Livingroom Cover" 
+
+      # the action to run. Available actions depend on the domain.
+      action: "close" 
+      
+      # additional variables for the action. Use URL-like key-value 
+      # pairing (key=value&...). Pass "" if no variables are required.
+      variables: ""
+
+      # "true" to only run the action when this ESPHome node is not currently 
+      # connected to the API on home assistant side. This allows for backup
+      # scenarios when you want to retain performance benefits in most cases
+      # but be fault tolerant should home assistant be down. 
+      # "false" to always run the action.
+      only_if_api_disconnected: "false"
 ```
 
 ## Detailed example: Running an action
@@ -101,6 +121,7 @@ binary_sensor:
             component_name: "livingroom-cover Cover"    # The component is called "${devicename} Cover".
             action: "close"                             # "close" because the Down Switch was pressed (ON).
             variables: ""                               # No additional variables required.
+            only_if_api_disconnected: "false"           # Always run this.
     on_release:
       then:
         - script.execute:
@@ -110,6 +131,7 @@ binary_sensor:
             component_name: "livingroom-cover Cover"    # The component is called "${devicename} Cover".
             action: "stop"                              # "stop" because the Down Switch was released (OFF).
             variables: ""                               # No additional variables required.
+            only_if_api_disconnected: "false"           # Always run this.
   - platform: gpio
     name: "${devicename} Switch Up"
     pin: GPIO18
@@ -124,6 +146,7 @@ binary_sensor:
             component_name: "livingroom-cover Cover"    # The component is called "${devicename} Cover".
             action: "open"                              # "open" because the Up Switch was pressed (ON).
             variables: ""                               # No additional variables required.
+            only_if_api_disconnected: "false"           # Always run this.
     on_release:
       then:
         - script.execute:
@@ -133,6 +156,7 @@ binary_sensor:
             component_name: "livingroom-cover Cover"    # The component is called "${devicename} Cover".
             action: "stop"                              # "stop" because the Up Switch was released (OFF).
             variables: ""                               # No additional variables required.
+            only_if_api_disconnected: "false"           # Always run this.
 ```
 
 </details>
