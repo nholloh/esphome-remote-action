@@ -20,20 +20,25 @@ script:
       component_name: string
       action: string
       variables: string
+      only_if_api_disconnected: bool
     then:
-      - script.execute:
-          id: _remote_action
-          device_name: !lambda return device_name;
-          domain: !lambda return domain;
-          component_name: !lambda return component_name;
-          url: !lambda |-
-            // Convert component_name to lowercase and replace spaces with underscores
-            std::string modified_component_name = component_name;
-            std::transform(modified_component_name.begin(), modified_component_name.end(), modified_component_name.begin(), ::tolower);
-            std::replace(modified_component_name.begin(), modified_component_name.end(), ' ', '_');
-            return "http://" + device_name + ".local/" + domain + "/" + modified_component_name + "/" + action + (variables.empty() ? "" : "?" + variables);
-          action: !lambda return action;
-          variables: !lambda return variables;
+      - if:
+          condition:
+            lambda: "return (only_if_api_disconnected && !api_is_connected()) || !only_if_api_disconnected;"
+          then:
+            - script.execute:
+                id: _remote_action
+                device_name: !lambda return device_name;
+                domain: !lambda return domain;
+                component_name: !lambda return component_name;
+                url: !lambda |-
+                  // Convert component_name to lowercase and replace spaces with underscores
+                  std::string modified_component_name = component_name;
+                  std::transform(modified_component_name.begin(), modified_component_name.end(), modified_component_name.begin(), ::tolower);
+                  std::replace(modified_component_name.begin(), modified_component_name.end(), ' ', '_');
+                  return "http://" + device_name + ".local/" + domain + "/" + modified_component_name + "/" + action + (variables.empty() ? "" : "?" + variables);
+                action: !lambda return action;
+                variables: !lambda return variables;
   - id: _remote_action
     mode: parallel
     parameters:
