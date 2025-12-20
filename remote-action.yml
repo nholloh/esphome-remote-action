@@ -5,7 +5,7 @@ globals:
   - id: remote_status_http_status_code
     type: int
     restore_value: no
-    initial_value: '-1'
+    initial_value: "-1"
   - id: remote_status_body
     type: std::string
     restore_value: no
@@ -49,11 +49,18 @@ script:
       action: string
       variables: string
     then:
-      - logger.log: 
+      - logger.log:
           format: "remote_action:\n  device_name: %s\n  domain: %s\n  component_name: %s\n  action: %s\n  variables: %s"
-          args: ["device_name.c_str()", "domain.c_str()", "component_name.c_str()", "action.c_str()", "variables.c_str()"]
+          args:
+            [
+              "device_name.c_str()",
+              "domain.c_str()",
+              "component_name.c_str()",
+              "action.c_str()",
+              "variables.c_str()",
+            ]
           level: INFO
-      - logger.log: 
+      - logger.log:
           format: "remote_action url: POST %s"
           args: ["url.c_str()"]
           level: DEBUG
@@ -85,22 +92,24 @@ script:
       component_name: string
       url: string
     then:
-      - logger.log: 
+      - logger.log:
           format: "remote_status:\n  device_name: %s\n  domain: %s\n  component_name: %s"
-          args: ["device_name.c_str()", "domain.c_str()", "component_name.c_str()"]
+          args:
+            ["device_name.c_str()", "domain.c_str()", "component_name.c_str()"]
           level: INFO
-      - logger.log: 
+      - logger.log:
           format: "remote_status url: GET %s"
           args: ["url.c_str()"]
           level: DEBUG
       - http_request.get:
           url: !lambda return url;
+          capture_response: true
           on_response:
-            then:
-              - lambda: |-
-                  id(remote_status_body) = body;
-                  id(remote_status_http_status_code) = response->status_code;
-      - logger.log: 
+            - then:
+                - lambda: |-
+                    id(remote_status_body) = body;
+                    id(remote_status_http_status_code) = response->status_code;
+      - logger.log:
           format: "remote_status response: %s %s"
           args: [id(remote_status_body), id(remote_status_http_status_code)]
           level: DEBUG
